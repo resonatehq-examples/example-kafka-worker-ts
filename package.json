@@ -1,0 +1,23 @@
+{
+  "name": "example-kafka-worker-ts",
+  "version": "0.1.0",
+  "description": "Resonate Kafka worker example application",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "produce": "tsx src/producer.ts",
+    "consume": "tsx src/consumer.ts",
+    "setup-topics": "tsx src/setup-topics.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@resonatehq/sdk": "^0.10.0",
+    "kafkajs": "^2.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

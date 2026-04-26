@@ -1,0 +1,37 @@
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.3.5
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=internal://0.0.0.0:29092,external://0.0.0.0:9092
+      - --advertise-kafka-addr=internal://redpanda:29092,external://localhost:9092
+    ports:
+      - "9092:9092" # for access from your host (e.g. kafkajs client)
+    networks:
+      - redpanda_network
+
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.8.2
+    container_name: redpanda-console
+    depends_on:
+      - redpanda
+    networks:
+      - redpanda_network
+    ports:
+      - "8080:8080"
+    environment:
+      CONFIG_FILEPATH: /tmp/console-config.yaml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["redpanda:29092"]
+    entrypoint: /bin/sh
+    command: -c 'mkdir -p /tmp && echo "$$CONSOLE_CONFIG_FILE" > /tmp/console-config.yaml && /app/console'
+
+networks:
+  redpanda_network:
